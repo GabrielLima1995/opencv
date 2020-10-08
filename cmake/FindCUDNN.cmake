@@ -65,15 +65,18 @@ endif()
 
 # extract version from the include
 if(CUDNN_INCLUDE_DIR)
-  if(CUDNN_INCLUDE_DIR)
+  file(READ "${CUDNN_INCLUDE_DIR}/cudnn.h" CUDNN_H_CONTENTS)
   file(READ "${CUDNN_INCLUDE_DIR}/cudnn_version.h" CUDNN_H_CONTENTS)
+ 
+  string(REGEX MATCH "define CUDNN_MAJOR ([0-9]+)" _ "${CUDNN_H_CONTENTS}")
+  set(CUDNN_MAJOR_VERSION ${CMAKE_MATCH_1} CACHE INTERNAL "")
 
   set(CUDNN_VERSION
-    "${CUDNN_MAJOR_VERSION}.${CUDNN_MINOR_VERSION}.${CUDNN_PATCH_VERSION}")
-#    CACHE
-#    STRING
-#    "cuDNN version"
-#  )
+    "${CUDNN_MAJOR_VERSION}.${CUDNN_MINOR_VERSION}.${CUDNN_PATCH_VERSION}"
+    CACHE
+    STRING
+    "cuDNN version"
+  )
 
   unset(CUDNN_H_CONTENTS)
 endif()
